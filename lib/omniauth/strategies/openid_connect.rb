@@ -59,14 +59,20 @@ module OmniAuth
       end
 
       def request_phase
+        Rails.logger.debug "====== Entering OmniAuth::Strategies::OpenIDConnect::request_phase ======"
         redirect authorize_uri
       end
 
       def callback_phase
+        Rails.logger.debug "====== Entering OmniAuth::Strategies::OpenIDConnect::callback_phase ======"
+        Rails.logger.debug "------ client = #{client.inspect} ------"
+        Rails.logger.debug "------ options = #{options.inspect} ------"
+        Rails.logger.debug "------ client_options = #{client_options.inspect} ------"
         client.redirect_uri = client_options.redirect_uri
         client.authorization_code = authorization_code
         access_token
         super
+        Rails.logger.debug "====== Exiting OmniAuth::Strategies::OpenIDConnect::callback_phase ======"
       end
 
       def authorization_code
