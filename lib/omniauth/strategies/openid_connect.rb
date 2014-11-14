@@ -86,7 +86,14 @@ module OmniAuth
       end
 
       def access_token
-        @access_token ||= client.access_token!
+        @access_token ||= lambda {
+          _access_token = client.access_token!(
+            scope: options.scope,
+            client_auth_method: client_options.client_auth_method,
+            private_key: client_options.private_key,
+            identifier: client_options.identifier
+          )
+        }.call()
       end
 
       def authorize_uri
