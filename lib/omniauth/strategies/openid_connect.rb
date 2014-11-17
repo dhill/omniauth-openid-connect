@@ -72,7 +72,6 @@ module OmniAuth
         client.authorization_code = authorization_code
         access_token
         super
-        Rails.logger.debug "====== Exiting OmniAuth::Strategies::OpenIDConnect::callback_phase ======"
       end
 
       def authorization_code
@@ -88,12 +87,20 @@ module OmniAuth
       def access_token
         @access_token ||= lambda {
           _access_token = client.access_token!(
-            scope: options.scope,
-            client_auth_method: client_options.client_auth_method,
-            private_key: client_options.private_key,
-            identifier: client_options.identifier
+                scope: options.scope,
+                client_auth_method: client_options.client_auth_method,
+                private_key: client_options.private_key,
+                identifier: client_options.identifier
           )
         }.call()
+      end
+
+      def get_access_token
+        token = client.access_token!(scope: options.scope, 
+                        client_auth_method: client_options.client_auth_method,
+                private_key: client_options.private_key,
+                identifier: client_options.identifier
+          )
       end
 
       def authorize_uri
